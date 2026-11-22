@@ -1,0 +1,71 @@
+name: FiveLoop
+options:
+  bundleIdPrefix: com.fiveloop
+  deploymentTarget:
+    iOS: "15.0"
+  createIntermediateGroups: true
+packages:
+  LooperCore:
+    path: Packages/LooperCore
+  swift-atomics:
+    url: https://github.com/apple/swift-atomics.git
+    from: 1.2.0
+targets:
+  FiveLoop:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources:
+      - path: App/Sources
+    dependencies:
+      - package: LooperCore
+        product: LooperCore
+      - package: swift-atomics
+        product: Atomics
+    scheme: {}
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.fiveloop.app
+        PRODUCT_NAME: FiveLoop
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "2"
+        SWIFT_VERSION: "5.0"
+        ENABLE_BITCODE: NO
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: App/Info.plist
+      configs:
+        Release:
+          SWIFT_OPTIMIZATION_LEVEL: -O
+          SWIFT_COMPILATION_MODE: wholemodule
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: FiveLoop
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSRequiresIPhoneOS: true
+        UILaunchScreen: {}
+        UIRequiresFullScreen: true
+        UIStatusBarHidden: true
+        UIBackgroundModes: [audio]
+        UIFileSharingEnabled: true
+        LSSupportsOpeningDocumentsInPlace: true
+        NSMicrophoneUsageDescription: "FiveLoop records your voice or instrument into the loop tracks."
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UTExportedTypeDeclarations:
+          - UTTypeIdentifier: com.fiveloop.memory
+            UTTypeDescription: FiveLoop Memory
+            UTTypeConformsTo: [public.data]
+            UTTypeTagSpecification:
+              public.filename-extension: [floop]
+          - UTTypeIdentifier: com.fiveloop.backup
+            UTTypeDescription: FiveLoop Backup
+            UTTypeConformsTo: [public.data]
+            UTTypeTagSpecification:
+              public.filename-extension: [flbk]

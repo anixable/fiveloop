@@ -1,0 +1,8 @@
+.build/
+Packages/LooperCore/.build/
+build/
+*.xcodeproj/
+DerivedData/
+Payload/
+*.ipa
+.swiftpm/
