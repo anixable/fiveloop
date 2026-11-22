@@ -38,6 +38,9 @@ final class AppModel: ObservableObject {
     @Published var diag: AudioIO.Diagnostics? = nil
     @Published var shareItems: [URL] = []
     @Published var busy: String? = nil
+    /// Global LED blink phase (~3 Hz) driven by the poll timer – no SwiftUI animations,
+    /// which on iPadOS 15 made the whole layout bounce.
+    @Published var blink = false
     @Published var trackColors: [Color] = [.green, .cyan, .yellow, .orange, .pink]
     @Published var bufferFrames: Int = UserDefaults.standard.integer(forKey: "bufferFrames").nonZero ?? 256
     @Published var latencyOffsetMs: Double = UserDefaults.standard.double(forKey: "latencyOffsetMs")
@@ -110,6 +113,8 @@ final class AppModel: ObservableObject {
     private func poll() {
         let s = engine.status.snapshot()
         if s != snap { snap = s }
+        let b = Int(CACurrentMediaTime() * 3.3) % 2 == 0
+        if b != blink { blink = b }
         while let ev = engine.events.pop() {
             switch ev {
             case .recordingFinished:

@@ -39,7 +39,7 @@ struct HWButton: View {
     var width: CGFloat? = nil
     var height: CGFloat = 54
     var action: () -> Void
-    @State private var phase = false
+    @EnvironmentObject private var app: AppModel
     var body: some View {
         Button(action: action) {
             VStack(spacing: 3) {
@@ -55,11 +55,10 @@ struct HWButton: View {
             .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.black.opacity(0.6), lineWidth: 1))
         }
         .buttonStyle(PressStyle())
-        .onAppear { if blink { withAnimation(.easeInOut(duration: 0.25).repeatForever()) { phase.toggle() } } }
     }
     private var ledColor: Color {
         guard let l = led else { return Color.black.opacity(0.5) }
-        return blink && phase ? l.opacity(0.2) : l
+        return blink && app.blink ? l.opacity(0.2) : l
     }
 }
 

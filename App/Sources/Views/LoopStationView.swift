@@ -114,7 +114,6 @@ struct TrackStrip: View {
     @EnvironmentObject var app: AppModel
     let track: Int
     var openSettings: () -> Void
-    @State private var blink = false
 
     var body: some View {
         let ts = app.snap.tracks[track]
@@ -139,16 +138,15 @@ struct TrackStrip: View {
                     .frame(width: 46)
                 Meter(level: ts.peak)
                 VStack(spacing: 8) {
-                    RecPlayPad(state: ts.state, position: ts.position, color: color, blink: blink) { app.recPlay(track) }
+                    RecPlayPad(state: ts.state, position: ts.position, color: color, blink: app.blink) { app.recPlay(track) }
                     Text(String(format: "LEVEL %.0f", settings.playLevel)).font(.system(size: 10, design: .monospaced)).foregroundColor(Theme.dim)
-                    StopPad(active: ts.state == .stopping, blink: blink) { app.stop(track) }
+                    StopPad(active: ts.state == .stopping, blink: app.blink) { app.stop(track) }
                 }
             }
         }
         .padding(8)
         .background(RoundedRectangle(cornerRadius: 10).fill(Theme.panel))
         .overlay(RoundedRectangle(cornerRadius: 10).stroke(track == app.currentTrack ? color.opacity(0.6) : Color.white.opacity(0.05), lineWidth: 1.5))
-        .onAppear { withAnimation(.easeInOut(duration: 0.3).repeatForever()) { blink.toggle() } }
     }
 }
 
