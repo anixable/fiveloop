@@ -239,7 +239,11 @@ final class PerformanceTests: XCTestCase {
         let elapsed = Date().timeIntervalSince(t0)
         let factor = seconds / elapsed
         print("PERF: \(String(format: "%.1f", factor))× real time (this build, this CPU), cpu ≈ \(String(format: "%.1f", 100 / factor))% of one core")
+        #if DEBUG
+        XCTAssertGreaterThan(factor, 0.3)   // unoptimised build on shared CI machines
+        #else
         XCTAssertGreaterThan(factor, 1.0)
+        #endif
         XCTAssertTrue(e.status.snapshot().tracks.allSatisfy { $0.state == .playing || $0.state == .overdubbing })
     }
 }
